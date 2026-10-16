@@ -24,7 +24,8 @@ nav: study
       two XRT stations run in lock-step, a master laptop broadcasting study actions to its peer for execution at a shared epoch, so two
       operators each drive a Unitree&nbsp;G1 and manipulate one crate together. Conditions switch on both stations at once, clocks are aligned
       (median offset 2.1&nbsp;ms, maximum 46&nbsp;ms), and every take is logged for a synchronized replay. The results below concern this
-      two-operator setting and our two cue designs, not XRT in general.</p>
+      two-operator setting and our two cue designs, not XRT in general. The study software (operator manager, lock-step link, recording and
+      digital twin) is in <a href="{{app_repo}}">proj_XRT</a>; the headset app is <a href="{{client_repo}}">XRT-Client</a>.</p>
     <h3>Abstract</h3>
     <p>Dual-operator humanoid teleoperation enables collaborative manipulation through two separate robots, but operators lack direct awareness
       of robot&ndash;object contact that is normally available during physical interaction. To address this, we present eXtended Reality

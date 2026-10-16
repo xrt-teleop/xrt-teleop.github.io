@@ -141,24 +141,29 @@
           optionally on a bHaptics TactGlove.</p>
         <div class="links"><a class="btn primary" href="https://github.com/Euler-Rodrigues-Lab/XRT-Client/releases/latest">Download APK</a>
           <a class="btn" href="https://github.com/Euler-Rodrigues-Lab/XRT-Client">GitHub</a></div></div>
+      <div class="card"><span class="pill">Python &middot; Unitree G1 + Inspire</span><h3>proj_XRT</h3>
+        <p>The XRT application for a G1 with Inspire tactile hands, and the stack used in the paper: the operator manager (single-operator
+          mode, or the dual-operator study with lock-step peer link), tactile-skin-to-cue streaming, crate tracking, synchronized take
+          recording and MuJoCo digital-twin replay. Study recordings are not public.</p>
+        <div class="links"><a class="btn" href="https://github.com/Euler-Rodrigues-Lab/proj_XRT">GitHub</a>
+          <a class="btn" href="https://github.com/Euler-Rodrigues-Lab/proj_XRT#manager-modes">Manager modes</a>
+          <a class="btn" href="https://github.com/Euler-Rodrigues-Lab/proj_XRT/blob/main/projects/inspire_hand_teleop/XRT_USER_STUDY_MANAGER.md">Study workflow</a></div></div>
+      <div class="card"><span class="pill">Python &middot; MIT</span><h3>XRT_devices</h3>
+        <p>The receiving end of XRT-Client: the WebRTC headset receiver (optionally in its own process), body-pose CSV recording and
+          CSV/BVH playback, MediaPipe camera tracking, the skeleton and coordinate conventions, and the ZED/MediaMTX video launcher.</p>
+        <div class="links"><a class="btn" href="https://github.com/Euler-Rodrigues-Lab/XRT_devices">GitHub</a>
+          <a class="btn" href="https://github.com/Euler-Rodrigues-Lab/XRT_devices#xrt-headset">Headset receiver</a>
+          <a class="btn" href="https://github.com/Euler-Rodrigues-Lab/XRT_devices#csv--bvh-playback--recording">Record &amp; replay</a></div></div>
       <div class="card"><span class="pill">Python &middot; Unitree G1</span><h3>g1_teleop + geo_kin_core</h3>
-        <p>The robot side we use: MuJoCo simulation and real-robot control of a Unitree&nbsp;G1 with Inspire hands, driven by the
+        <p>The G1 base that proj_XRT builds on: robot models, MuJoCo simulation and real-robot control of a Unitree&nbsp;G1, driven by the
           closed-form <a href="https://sew-mimic.com/">SEW-MIMIC</a> retargeter in <code>geo_kin_core</code>.</p>
         <div class="links"><a class="btn" href="https://github.com/Euler-Rodrigues-Lab/g1_teleop">g1_teleop</a>
           <a class="btn" href="https://github.com/Euler-Rodrigues-Lab/geo_kin_core">geo_kin_core</a></div></div>
-      <div class="card"><span class="pill">Python</span><h3>XRT_devices</h3>
-        <p>Robot-agnostic input devices: the XR (WebRTC) headset receiver that XRT-Client connects to, MediaPipe camera tracking, CSV
-          recording and CSV/BVH playback.</p>
-        <div class="links"><a class="btn" href="https://github.com/Euler-Rodrigues-Lab/XRT_devices">GitHub</a></div></div>
       <div class="card"><span class="pill">Python &middot; optional</span><h3>XR-Robot-Teleop-Server</h3>
         <p>A small aiortc peer with per-channel callbacks, for checking, visualizing or recording pose without a robot. Not needed to
           run a robot.</p>
         <div class="links"><a class="btn" href="https://pypi.org/project/xr-robot-teleop-server">PyPI</a>
           <a class="btn" href="https://github.com/yunho-c/XR-Robot-Teleop-Server">GitHub</a></div></div>
-      <div class="card"><span class="pill">Study stack &middot; release in progress</span><h3>Dual-XRT study tools</h3>
-        <p>The lock-step synchronization, MuJoCo twin and synchronized-logging tools used in the two-operator study.
-          Study recordings are not public.</p>
-        <div class="links"><a class="btn" href="https://github.com/Euler-Rodrigues-Lab">Euler Rodrigues Lab</a></div></div>
     </div>
     <p class="t-note">XRT-Client: original author Yunho Cho; contributors Austin Graves, Chuizheng Kong, Sundhar Vinodh Sangeetha, mjaychoi
       and iaweebowo.</p>
@@ -175,17 +180,22 @@
       (<code>adb uninstall com.GTSafeRoboticsLab.xrteleopclient</code>). To modify the app, build from source: see the
       <a href="https://github.com/Euler-Rodrigues-Lab/XRT-Client#build">build guide</a> (Unity 6000.3.11f1, Git LFS).</p>
     <ol start="3">
-      <li>Start a robot-side peer on a computer the headset can reach. For a Unitree&nbsp;G1 (simulated or real), follow the
-        <a href="https://github.com/Euler-Rodrigues-Lab/g1_teleop">g1_teleop</a> README, then run:</li>
+      <li>Start a robot-side peer on a computer the headset can reach. For the full XRT application on a G1 with Inspire hands
+        (contact cues included), install <a href="https://github.com/Euler-Rodrigues-Lab/proj_XRT#clone-and-install">proj_XRT</a> and start it without sending hardware commands:</li>
     </ol>
-    <pre data-copy><code>python -m g1_teleop.demos.teleop_xr --device xrt --hand inspire --backend auto</code></pre>
+    <pre data-copy><code>git clone --recurse-submodules https://github.com/Euler-Rodrigues-Lab/proj_XRT.git
+cd proj_XRT &amp;&amp; uv sync --locked --python 3.12
+python -m projects.inspire_hand_teleop.demo_g1_inspire_xr_robot_teleop_full_body_hw --dry_run</code></pre>
+    <p class="t-note">Drop <code>--dry_run</code> and add <code>--net &lt;interface&gt;</code> for the real robot, or run the operator manager
+      (<code>projects.inspire_hand_teleop.XRT_user_study_manager</code>). For retargeting alone in simulation, use
+      <a href="https://github.com/Euler-Rodrigues-Lab/g1_teleop">g1_teleop</a>: <code>python -m g1_teleop.demos.teleop_xr --device xrt --hand inspire</code>.</p>
     <p class="t-note">No robot? <code>pip install xr-robot-teleop-server</code> and run one of its examples (e.g.
       <code>visualize_body_pose.py</code>) to see the pose arrive.</p>
     <ol start="4">
       <li>In VR, open <strong>IP Address</strong> and enter the computer's IP. <strong>Power</strong> connects; <strong>Play</strong> starts
         teleoperation and pose streaming, and pressing it again pauses. Across networks, use a VPN such as Tailscale.</li>
       <li>Inspect the incoming skeleton in the <a href="/viewer/">pose viewer</a>, or record and replay it with
-        <a href="https://github.com/Euler-Rodrigues-Lab/XRT_devices">XRT_devices</a>.</li>
+        <a href="https://github.com/Euler-Rodrigues-Lab/XRT_devices#csv--bvh-playback--recording">XRT_devices</a>.</li>
     </ol>
   </section>
 
