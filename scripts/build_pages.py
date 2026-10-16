@@ -16,7 +16,7 @@ CONFIG = dict(
     client_repo='https://github.com/Euler-Rodrigues-Lab/XRT-Client',
     devices_repo='https://github.com/Euler-Rodrigues-Lab/XRT_devices',
     app_repo='https://github.com/Euler-Rodrigues-Lab/proj_XRT',
-    paper_pdf='/assets/XRT_preprint_2026-10-16_v2.pdf',
+    paper_pdf='/assets/XRT_preprint_2026-10-16_v3.pdf',
     arxiv='',  # e.g. 'https://arxiv.org/abs/26xx.xxxxx'; empty -> nav links to the PDF
     year='2026',
 )

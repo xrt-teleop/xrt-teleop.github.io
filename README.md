@@ -62,7 +62,7 @@ and change `CONFIG['domain']` in `scripts/build_pages.py`.
 
 - **arXiv link:** set `CONFIG['arxiv']` in `scripts/build_pages.py`; the nav then shows "arXiv". Also add `eprint`/`archivePrefix`
   to the BibTeX in `src/pages/study.html`.
-- **Paper PDF:** add the new PDF under `site/assets/` and set `paper_pdf` in `CONFIG` (currently `XRT_preprint_2026-10-16_v2.pdf`).
+- **Paper PDF:** add the new PDF under `site/assets/` and set `paper_pdf` in `CONFIG` (currently `XRT_preprint_2026-10-16_v3.pdf`).
 - **Preview locally:** `cd site && python3 -m http.server 8765`, then open http://127.0.0.1:8765 (pages use root paths, so opening
   the HTML files directly does not work; the Rerun panels stay blank locally because this server sends no CORS header).
 - **Videos:** `scripts/build_media.sh` rebuilds every clip from `../video_submission_final` (H.264, 720p, fast-start, posters).
