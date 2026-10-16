@@ -1,0 +1,4 @@
+# Deploy this folder to the OLD Cloudflare Pages project (xr-robot-teleop-website) to forward every old link.
+# Recording paths are identical on the new site, so Rerun links in other READMEs keep working.
+/assets/*  https://xrt-teleop.github.io/assets/:splat  301
+/*         https://xrt-teleop.github.io/system/        301

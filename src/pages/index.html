@@ -1,0 +1,167 @@
+title: XRT | Extended Reality Teleoperation with Contact Feedback
+description: XRT is an extended reality teleoperation framework that drives a robot from a Quest 3 and returns the robot's fingertip contact as vibrotactile and auditory cues. Our study runs two XRT stations together for dual-operator humanoid teleoperation.
+path: /
+nav: videos
+---
+<section class="container hero">
+  <h1>We present <span class="name">XRT</span>:
+    <span class="sub">an extended reality teleoperation framework that returns a robot's touch to its operator</span></h1>
+  <p class="lede">Drive a robot with your body from a Meta Quest&nbsp;3, see through its stereo cameras, and feel its fingertip contact as
+    finger-localized vibration or open-ear sound. In our study, we ran two XRT stations together so two operators could share one object through two humanoids.</p>
+  <div class="btn-row">
+    <a class="btn primary" href="{{paper_pdf}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Paper</a>
+    <a class="btn" href="#full-video"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Video</a>
+    <a class="btn" href="/system/#code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>Code</a>
+    <a class="btn" href="/study/#citation">BibTeX</a>
+  </div>
+</section>
+
+<section class="container" aria-label="What this site covers">
+  <div class="scope">
+    <a class="scope-card xrt" href="/system/">
+      <span class="tag xrt">XRT system</span>
+      <h2>XRT: one operator, one robot</h2>
+      <div class="diagram"><span class="box">Quest&nbsp;3 + glove</span>&rarr;<span class="box">laptop</span>&rarr;<span class="box">robot</span></div>
+      <p>The framework. Body tracking drives the robot through closed-form SEW-MIMIC retargeting; stereo video and tactile-skin contact cues
+        come back to the operator. Robot-agnostic; client and server code are on GitHub.</p>
+      <span class="go">Explore the system &rarr;</span>
+    </a>
+    <a class="scope-card study" href="/study/">
+      <span class="tag study">Dual-humanoid study (paper)</span>
+      <h2>Two XRT stations, one shared crate</h2>
+      <div class="diagram"><span class="box">XRT station 1</span>&harr;<span class="box">lock-step link</span>&harr;<span class="box">XRT station 2</span></div>
+      <p>Our paper. Two synchronized XRT stations drive two Unitree&nbsp;G1 humanoids; 16 dyads (32 operators) compared vision-only,
+        auditory, vibrotactile and combined contact feedback.</p>
+      <span class="go">Read the study &rarr;</span>
+    </a>
+  </div>
+</section>
+
+<section class="container block">
+  <header>
+    <span class="tag xrt">XRT system</span>
+    <h3>Your body is the controller. The Quest&nbsp;3's inside-out body and hand tracking drives the robot's arms, hands and neck through
+      closed-form <a href="https://sew-mimic.com/">SEW-MIMIC</a> retargeting, with no exoskeleton or hand-held controllers.</h3>
+  </header>
+  <div class="carousel" tabindex="0" aria-roledescription="carousel">
+    <div class="viewport"><div class="track">
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="metadata" poster="/assets/video/operators_demo.jpg"><source src="/assets/video/operators_demo.mp4" type="video/mp4"></video></div>
+        <p class="cap">Operators drive the robots from Quest&nbsp;3 body tracking (staged demonstration, curtain drawn back)</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/architecture.jpg"><source src="/assets/video/architecture.mp4" type="video/mp4"></video></div>
+        <p class="cap">Signal paths of one XRT station: tracked pose &rarr; retargeting &rarr; arm, hand and neck commands</p></div>
+      <div class="slide"><div class="frame"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/R7ryrr48uPQ" title="XRT teleoperation in MuJoCo / robosuite" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <p class="cap">The XRT client driving a simulated robot in MuJoCo / robosuite (from the original project page)</p></div>
+    </div></div>
+    <button class="arrow prev" type="button" aria-label="Previous clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7 7-7-7 7-7"/></svg></button>
+    <button class="arrow next" type="button" aria-label="Next clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<section class="container block">
+  <header>
+    <span class="tag xrt">XRT system</span>
+    <h3>The robot's touch comes back. One quantizer turns the robot's tactile-skin activation into four contact levels, rendered on the
+      matching finger of a vibrotactile glove, as an open-ear note, or both. No force-feedback hardware, no extra control loop.</h3>
+  </header>
+  <div class="carousel" tabindex="0" aria-roledescription="carousel">
+    <div class="viewport"><div class="track">
+      <div class="slide"><div class="frame"><video data-autoplay data-sound loop muted playsinline preload="metadata" poster="/assets/video/feedback_sweep.jpg"><source src="/assets/video/feedback_sweep.mp4" type="video/mp4"></video></div>
+        <p class="cap">Test sweep across the six contact regions: glove pulses and notes share one schedule (turn sound on)</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay data-sound loop muted playsinline preload="none" poster="/assets/video/feedback_recorded.jpg"><source src="/assets/video/feedback_recorded.mp4" type="video/mp4"></video></div>
+        <p class="cap">Cues reconstructed from recorded tactile data during a real flip (turn sound on)</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/robot_pov_flip.jpg"><source src="/assets/video/robot_pov_flip.mp4" type="video/mp4"></video></div>
+        <p class="cap">What the operator sees: the robot's ZED&nbsp;Mini stereo view, streamed to the headset</p></div>
+    </div></div>
+    <button class="arrow prev" type="button" aria-label="Previous clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7 7-7-7 7-7"/></svg></button>
+    <button class="arrow next" type="button" aria-label="Next clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<section class="container block">
+  <header>
+    <span class="tag study">Dual-humanoid study</span>
+    <h3>Two XRT stations running in lock-step let two operators share one object through two humanoids, coordinating only through
+      vision, speech and the contact cues.</h3>
+  </header>
+  <div class="carousel" tabindex="0" aria-roledescription="carousel">
+    <div class="viewport"><div class="track">
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/operators_staged.jpg"><source src="/assets/video/operators_staged.mp4" type="video/mp4"></video></div>
+        <p class="cap">Two operators, two Unitree G1s, one crate: a full flip (staged demonstration; in the study a curtain separated operators from robots)</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/flip_over_twin.jpg"><source src="/assets/video/flip_over_twin.mp4" type="video/mp4"></video></div>
+        <p class="cap">Attempt 1, flip over: overhead recording beside the digital twin's tactile contact</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/flip_back_twin.jpg"><source src="/assets/video/flip_back_twin.mp4" type="video/mp4"></video></div>
+        <p class="cap">Attempt 2, flip back: the same dyad returns the crate upright</p></div>
+    </div></div>
+    <button class="arrow prev" type="button" aria-label="Previous clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7 7-7-7 7-7"/></svg></button>
+    <button class="arrow next" type="button" aria-label="Next clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<section class="container block">
+  <header>
+    <span class="tag study">Dual-humanoid study</span>
+    <h3>Sixteen dyads lifted and flipped a crate under four conditions, a 2&times;2 of tactile and auditory cues added to stereo video,
+      in a counterbalanced Williams square.</h3>
+  </header>
+  <div class="carousel" tabindex="0" aria-roledescription="carousel">
+    <div class="viewport"><div class="track">
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/four_conditions.jpg"><source src="/assets/video/four_conditions.mp4" type="video/mp4"></video></div>
+        <p class="cap">One dyad, all four conditions (block attempts, overhead view)</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/cond_V.jpg"><source src="/assets/video/cond_V.mp4" type="video/mp4"></video></div>
+        <p class="cap">V: stereo video only</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/cond_AV.jpg"><source src="/assets/video/cond_AV.mp4" type="video/mp4"></video></div>
+        <p class="cap">A+V: open-ear sonification + video</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/cond_TV.jpg"><source src="/assets/video/cond_TV.mp4" type="video/mp4"></video></div>
+        <p class="cap">T+V: vibrotactile glove + video</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/cond_TAV.jpg"><source src="/assets/video/cond_TAV.mp4" type="video/mp4"></video></div>
+        <p class="cap">T+A+V: both cues + video</p></div>
+    </div></div>
+    <button class="arrow prev" type="button" aria-label="Previous clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7 7-7-7 7-7"/></svg></button>
+    <button class="arrow next" type="button" aria-label="Next clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<section class="container block">
+  <header>
+    <span class="tag study">Dual-humanoid study</span>
+    <h3>Every take is logged on a shared clock (median offset 2.1&nbsp;ms) and replays as a synchronized two-robot digital twin of both robots and the crate.</h3>
+  </header>
+  <div class="carousel" tabindex="0" aria-roledescription="carousel">
+    <div class="viewport"><div class="track">
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/twin_sync.jpg"><source src="/assets/video/twin_sync.mp4" type="video/mp4"></video></div>
+        <p class="cap">Shared replay clock, clock offset and end-to-end latency</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/twin_wide.jpg"><source src="/assets/video/twin_wide.mp4" type="video/mp4"></video></div>
+        <p class="cap">MuJoCo twin replaying both robots and the crate</p></div>
+    </div></div>
+    <button class="arrow prev" type="button" aria-label="Previous clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7 7-7-7 7-7"/></svg></button>
+    <button class="arrow next" type="button" aria-label="Next clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<section class="container block">
+  <header>
+    <span class="tag study">Dual-humanoid study</span>
+    <h3>Operators rated our vibrotactile cues more effective and far easier to interpret than our auditory cues, yet we detected no
+      condition difference in task performance, which changed substantially with practice. <a href="/study/">See the results &rarr;</a></h3>
+  </header>
+  <div class="carousel" tabindex="0" aria-roledescription="carousel">
+    <div class="viewport"><div class="track">
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/results.jpg"><source src="/assets/video/results.mp4" type="video/mp4"></video></div>
+        <p class="cap">All 32 operators ranked tactile + vision above audio + vision</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/learning_dyad7.jpg"><source src="/assets/video/learning_dyad7.mp4" type="video/mp4"></video></div>
+        <p class="cap">Practice: one dyad's flip-over in block 1 vs block 4 (12&times; speed)</p></div>
+      <div class="slide"><div class="frame"><video data-autoplay loop muted playsinline preload="none" poster="/assets/video/learning_dyad1.jpg"><source src="/assets/video/learning_dyad1.mp4" type="video/mp4"></video></div>
+        <p class="cap">Practice: a second dyad, block 1 vs block 4 (12&times; speed)</p></div>
+    </div></div>
+    <button class="arrow prev" type="button" aria-label="Previous clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7 7-7-7 7-7"/></svg></button>
+    <button class="arrow next" type="button" aria-label="Next clip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<section class="band" id="full-video">
+  <div class="narrow">
+    <h2>The full video</h2>
+    <p>System, study design, recorded feedback, synchronized replay and results in 2&nbsp;min&nbsp;40&nbsp;s. Transcript excerpts use synthetic voices.</p>
+    <div class="frame"><video controls preload="none" playsinline poster="/assets/video/XRT_full_video.jpg"><source src="/assets/video/XRT_full_video.mp4" type="video/mp4"></video></div>
+  </div>
+</section>

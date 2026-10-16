@@ -1,0 +1,185 @@
+title: XRT System | One operator, one robot
+description: How an XRT station works: Quest 3 body tracking, SEW-MIMIC retargeting, stereo video and tactile-skin contact feedback through a vibrotactile glove and open-ear sonification. Code, build guide and data-channel reference.
+path: /system/
+nav: system
+---
+<div class="container">
+  <section class="page-head">
+    <span class="tag xrt">XRT system</span>
+    <h1>XRT: one operator, one robot</h1>
+    <p class="lede">XRT (eXtended Reality Teleoperation) is the framework. A single XRT station connects one operator in a Meta Quest&nbsp;3
+      to one robot. It is not tied to a particular robot, and it is what this page documents. Our <a href="/study/">dual-humanoid study</a>
+      runs two of these stations together; that synchronization layer is described there.</p>
+  </section>
+
+  <section class="sec">
+    <div class="meta"><span class="tag paper">Paper Fig. 2</span></div>
+    <h2>One station, end to end</h2>
+    <p>The operator's headset streams tracked body pose to a laptop, which retargets it onto the robot and sends joint, hand and neck
+      commands. The robot returns stereo video and tactile-skin readings; the laptop streams contact intensities to the headset, which renders
+      them as cues on the operator's glove and speakers. In the figure, everything left of the dashed box is one XRT station. The dashed <em>peer station</em> and the
+      lock-step link exist only in the two-operator study.</p>
+    <figure class="bordered"><img src="/assets/img/fig2_architecture.png" alt="Architecture of one XRT station: operator with Quest 3 and TactGloves, master laptop, Unitree G1 robot, shared crate and table, and a dashed peer station" loading="lazy" width="1600" height="515">
+      <figcaption>Black arrows carry commands; red arrows carry sensing and feedback. Rates are those of the study build.</figcaption></figure>
+    <div class="stats">
+      <div class="stat"><b>&le;90&nbsp;Hz</b><span>body pose from Quest&nbsp;3 (84 bones, WebRTC)</span></div>
+      <div class="stat"><b>60&nbsp;Hz</b><span>closed-form SEW retargeting per arm</span></div>
+      <div class="stat"><b>57&nbsp;ms</b><span>estimated mean video glass-to-glass latency (per-take p95 66&nbsp;ms)</span></div>
+      <div class="stat"><b>120&nbsp;Hz</b><span>contact intensities streamed to the headset</span></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Pose in, commands out</h2>
+    <div class="two-col">
+      <div>
+        <h3>Body tracking</h3>
+        <p>The Quest&nbsp;3's onboard cameras provide markerless hand and upper-body tracking (Meta Movement SDK, inside-out body tracking).
+          The headset streams an 84-bone pose over an unreliable, unordered WebRTC data channel at up to 90&nbsp;Hz; streaming channels are
+          kept unreliable because reliable SCTP head-of-line-blocks on Wi-Fi loss.</p>
+        <h3>Retargeting</h3>
+        <p>At 60&nbsp;Hz the laptop solves each 7-DoF arm from body-frame shoulder, elbow and wrist positions plus wrist orientation with the
+          closed-form geometric solver <a href="https://sew-mimic.com/">SEW-MIMIC</a>. Joint targets stream at 500&nbsp;Hz (DDS on the
+          Unitree&nbsp;G1), finger angles from the tracked hand at 50&nbsp;Hz, and head yaw and pitch drive a two-axis neck gimbal.</p>
+      </div>
+      <div>
+        <h3>Video</h3>
+        <p>A ZED&nbsp;Mini on the robot's neck gimbal streams HD720 stereo at 60&nbsp;fps through a local relay (MediaMTX, WHEP) into a
+          stereo shader in the headset (90&deg;&times;60&deg; field of view). Estimated from measured network, buffering and actuation terms plus
+          assumed capture and display terms, video glass-to-glass latency averaged 57&nbsp;&plusmn;&nbsp;3&nbsp;ms over 128 attempts and motion-to-motion
+          teleoperation latency 87&nbsp;&plusmn;&nbsp;9&nbsp;ms over 120 attempts in the study.</p>
+        <h3>Safety layers</h3>
+        <ul>
+          <li>Pose hold on lost tracking, and a pause when the headset is removed</li>
+          <li>Current-triggered compliance and an emergency stop</li>
+          <li>Head keep-out zone and a shoulder abduction clamp</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="meta"><span class="tag paper">Paper Fig. 1 &middot; Table I</span></div>
+    <h2>Contact feedback: one signal, two displays</h2>
+    <div class="two-col">
+      <div>
+        <p>Each robot hand (Inspire RH56DFTP) has a tactile skin. Each of twelve regions per robot is reduced to one number (the peak of its
+          fingertip and nail patches, or the palm mean), baseline-subtracted, gated at a calibrated noise floor and normalized. The result
+          encodes <strong>contact state</strong> (which finger, when, how strongly, and when released), not calibrated force.</p>
+        <p>One four-level quantizer feeds both displays, so the cues carry the same contact signal and differ only in rendering:</p>
+        <ul>
+          <li><strong>Vibrotactile:</strong> a bHaptics TactGlove DK2 fires one burst on the matching finger's actuator at each level change
+            (palm contact uses the wrist motor).</li>
+          <li><strong>Auditory:</strong> a 125&nbsp;ms bell from the Quest&nbsp;3's open-ear speakers. Pitch names the finger; octave and loudness
+            code the level; releases play the reversed bell an octave lower.</li>
+        </ul>
+        <p class="formula">f(n) = 130.81 &middot; 2<sup>7n/12</sup> Hz, &nbsp;n = 0&hellip;5 (palm &rarr; little finger)</p>
+      </div>
+      <figure style="margin-top:0"><img class="light" src="/assets/img/fig1_teaser.png" alt="Photo of the testbed with signal paths, and the three cue channels: robot view, auditory open-ear notes, vibrotactile TactGlove" loading="lazy" width="1025" height="805">
+        <figcaption>Signal paths for one station. Tracked pose commands the robot; video (V) and hand-contact cues (A/T) return to the operator.</figcaption></figure>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Activation band</th><th>Light</th><th>Medium</th><th>High</th><th>Maximum</th></tr></thead>
+      <tbody>
+        <tr><td>Normalized activation</td><td>0.10&ndash;0.35</td><td>0.35&ndash;0.60</td><td>0.60&ndash;0.85</td><td>0.85&ndash;1</td></tr>
+        <tr><td>Glove amplitude (of 100)</td><td>10</td><td>25</td><td>50</td><td>70</td></tr>
+        <tr><td>Glove pulses (20&nbsp;ms)</td><td>1</td><td>1</td><td>1</td><td>2</td></tr>
+        <tr><td>Bell octave (upward)</td><td>0</td><td>+1</td><td>+1</td><td>+2</td></tr>
+        <tr><td>Bell loudness (relative)</td><td>0.10</td><td>0.35</td><td>0.60</td><td>0.85</td></tr>
+      </tbody></table></div>
+    <p class="t-note">Intensities stream to the headset at 120&nbsp;Hz, where both displays quantize them into the same four bands; the sonification adds exponential smoothing (0.80) and hysteresis (0.05).</p>
+  </section>
+
+  <section class="sec">
+    <h2>Hardware we used</h2>
+    <p>On the operator side, XRT uses a headset, gloves and one laptop; the robot side below is what our station used.</p>
+    <div class="cards">
+      <div class="card"><span class="pill">Operator</span><h3>Meta Quest&nbsp;3 + TactGlove DK2</h3>
+        <p>Inside-out body and hand tracking, open-ear speakers, bHaptics glove with fingertip and wrist actuators. A facial fan reduces
+          visually induced motion sickness.</p></div>
+      <div class="card"><span class="pill">Robot</span><h3>Unitree G1 EDU+ with Inspire hands</h3>
+        <p>7-DoF arms, Inspire RH56DFTP tactile-skin hands, and a two-axis Dynamixel neck gimbal with a ZED&nbsp;Mini stereo camera.</p></div>
+      <div class="card"><span class="pill">Compute &amp; network</span><h3>Laptop + Wi-Fi 6E</h3>
+        <p>One laptop per station runs retargeting, video relay and feedback; headsets connect over a Wi-Fi&nbsp;6E LAN.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="code">
+    <h2>Code</h2>
+    <div class="callout">&#9888;&#65039; XRT-Client supports Meta Quest&nbsp;3. Quest&nbsp;Pro is untested; other headsets are not supported.</div>
+    <div class="cards">
+      <div class="card"><span class="pill">Unity 6 &middot; Meta Quest&nbsp;3 &middot; MIT</span><h3>XRT-Client</h3>
+        <p>The headset app. It streams upper-body and hand pose (Meta Movement SDK) over WebRTC and receives video, contact cues and
+          robot telemetry back. Two video modes: <strong>FPV</strong> (stereo camera over MediaMTX WHEP) and <strong>Webcam</strong>
+          (passthrough plus a mono stream, with on-device AprilTag tracking). Contact cues play as audio haptics, always available, and
+          optionally on a bHaptics TactGlove.</p>
+        <div class="links"><a class="btn primary" href="{{client_repo}}/releases/latest">Download APK</a>
+          <a class="btn" href="{{client_repo}}">GitHub</a></div></div>
+      <div class="card"><span class="pill">Python &middot; Unitree G1</span><h3>g1_teleop + geo_kin_core</h3>
+        <p>The robot side we use: MuJoCo simulation and real-robot control of a Unitree&nbsp;G1 with Inspire hands, driven by the
+          closed-form <a href="https://sew-mimic.com/">SEW-MIMIC</a> retargeter in <code>geo_kin_core</code>.</p>
+        <div class="links"><a class="btn" href="{{github_org}}/g1_teleop">g1_teleop</a>
+          <a class="btn" href="{{github_org}}/geo_kin_core">geo_kin_core</a></div></div>
+      <div class="card"><span class="pill">Python</span><h3>XRT_devices</h3>
+        <p>Robot-agnostic input devices: the XR (WebRTC) headset receiver that XRT-Client connects to, MediaPipe camera tracking, CSV
+          recording and CSV/BVH playback.</p>
+        <div class="links"><a class="btn" href="{{github_org}}/XRT_devices">GitHub</a></div></div>
+      <div class="card"><span class="pill">Python &middot; optional</span><h3>XR-Robot-Teleop-Server</h3>
+        <p>A small aiortc peer with per-channel callbacks, for checking, visualizing or recording pose without a robot. Not needed to
+          run a robot.</p>
+        <div class="links"><a class="btn" href="https://pypi.org/project/xr-robot-teleop-server">PyPI</a>
+          <a class="btn" href="https://github.com/yunho-c/XR-Robot-Teleop-Server">GitHub</a></div></div>
+      <div class="card"><span class="pill">Study stack &middot; release in progress</span><h3>Dual-XRT study tools</h3>
+        <p>The lock-step synchronization, MuJoCo twin and synchronized-logging tools used in the two-operator study.
+          Study recordings are not public.</p>
+        <div class="links"><a class="btn" href="{{github_org}}">Euler Rodrigues Lab</a></div></div>
+    </div>
+    <p class="t-note">XRT-Client: original author Yunho Cho; contributors Austin Graves, Chuizheng Kong, Sundhar Vinodh Sangeetha, mjaychoi
+      and iaweebowo.</p>
+
+    <h3>Quick start</h3>
+    <ol>
+      <li>Download <code>XRT-Client-v&lt;version&gt;.apk</code> from the <a href="{{client_repo}}/releases/latest">latest XRT-Client release</a>
+        (no Unity needed; bHaptics glove support is built in).</li>
+      <li>Enable developer mode on the Quest&nbsp;3, connect it over USB and install the APK with Meta Quest Developer Hub
+        (drag and drop) or <code>adb install -r XRT-Client-v&lt;version&gt;.apk</code>. On the headset, open
+        <strong>Library &rarr; Unknown Sources &rarr; XR Robot Teleop Client</strong>.</li>
+    </ol>
+    <p class="t-note">If an older build signed with a different key is installed, uninstall it first
+      (<code>adb uninstall com.GTSafeRoboticsLab.xrteleopclient</code>). To modify the app, build from source: see the
+      <a href="{{client_repo}}#build">build guide</a> (Unity 6000.3.11f1, Git LFS).</p>
+    <ol start="3">
+      <li>Start a robot-side peer on a computer the headset can reach. For a Unitree&nbsp;G1 (simulated or real), follow the
+        <a href="{{github_org}}/g1_teleop">g1_teleop</a> README, then run:</li>
+    </ol>
+    <pre data-copy><code>python -m g1_teleop.demos.teleop_xr --device xrt --hand inspire --backend auto</code></pre>
+    <p class="t-note">No robot? <code>pip install xr-robot-teleop-server</code> and run one of its examples (e.g.
+      <code>visualize_body_pose.py</code>) to see the pose arrive.</p>
+    <ol start="4">
+      <li>In VR, open <strong>IP Address</strong> and enter the computer's IP. <strong>Power</strong> connects; <strong>Play</strong> starts
+        teleoperation and pose streaming, and pressing it again pauses. Across networks, use a VPN such as Tailscale.</li>
+      <li>Inspect the incoming skeleton in the <a href="/viewer/">pose viewer</a>, or record and replay it with
+        <a href="{{github_org}}/XRT_devices">XRT_devices</a>.</li>
+    </ol>
+  </section>
+
+  <section class="sec">
+    <h2>Data-channel reference</h2>
+    <p>The headset holds two independent WebRTC connections: a teleoperation link to the robot-side peer (data channels below,
+      single-shot HTTP offer to <code>:8080/offer</code>) and a receive-only video link (WHEP in FPV Mode). XRT-Client creates every data
+      channel, including the ones the peer sends on. Rates are those of the study build.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Channel</th><th>Direction</th><th>Delivery</th><th>Payload</th><th>Rate</th></tr></thead>
+      <tbody>
+        <tr><td><code>body_pose</code></td><td>headset &rarr; peer</td><td>unreliable, unordered</td><td>84 bones &times; (id, position, quaternion), binary</td><td>&le;90&nbsp;Hz</td></tr>
+        <tr><td><code>apriltag_pose</code></td><td>headset &rarr; peer</td><td>unreliable, unordered</td><td>tag poses, same binary layout (Webcam Mode only)</td><td>not used in the study</td></tr>
+        <tr><td><code>camera</code></td><td>headset &rarr; peer</td><td>reliable, ordered</td><td>head yaw, pitch, roll (JSON)</td><td>per frame</td></tr>
+        <tr><td><code>unity_state</code></td><td>headset &rarr; peer</td><td>reliable, unordered</td><td>teleop state (<code>teleop_active</code>), latency pongs</td><td>on event, 2&nbsp;Hz</td></tr>
+        <tr><td><code>haptics</code></td><td>peer &rarr; headset</td><td>unreliable, unordered</td><td>per-finger contact intensities (JSON)</td><td>120&nbsp;Hz</td></tr>
+        <tr><td><code>unity_cmds</code></td><td>peer &rarr; headset</td><td>reliable, unordered</td><td>commands: haptics toggles, viewport, <code>teleop_active</code>, <code>latency_ping</code></td><td>on event</td></tr>
+        <tr><td><code>motor_stats</code></td><td>peer &rarr; headset</td><td>unreliable, unordered</td><td>arm temperatures and torques (inactive in the study build)</td><td>10&nbsp;Hz</td></tr>
+      </tbody></table></div>
+    <p class="t-note">A stock server that ignores a channel just logs it as unhandled. Full details are in the
+      <a href="{{client_repo}}#data-channels">XRT-Client README</a>.</p>
+  </section>
+</div>

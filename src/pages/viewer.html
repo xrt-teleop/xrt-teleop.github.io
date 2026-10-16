@@ -1,0 +1,31 @@
+title: Pose Viewer | XRT body-tracking data in Rerun
+description: Interactive Rerun recordings of XRT body-pose streams and the bone-frame conventions used by XRT-Client and XRT_devices.
+path: /viewer/
+nav: viewer
+---
+<div class="container">
+  <section class="page-head">
+    <span class="tag xrt">XRT system</span>
+    <h1>Pose viewer</h1>
+    <p class="lede">Interactive recordings of what an XRT headset streams, in the <a href="https://rerun.io/">Rerun</a> web viewer. Drag to
+      orbit, scroll to zoom, and scrub the timeline. Each viewer is pinned to the Rerun version that wrote its recording.</p>
+  </section>
+
+  <section class="sec">
+    <h2>Body-pose stream</h2>
+    <p>A recorded session of the 84-bone body and hand skeleton that XRT-Client sends over the <code>body_pose</code> channel.</p>
+    <div class="callout"><code>NOTE</code>: set playback to 1000&nbsp;fps in the timeline panel for real-time speed.</div>
+    <iframe class="rerun" title="Rerun viewer: XRT body pose recording" loading="lazy" allow="fullscreen"
+      data-rrd="/assets/body_pose_data_07282025_1126pm.rrd" data-rerun="0.24.0"></iframe>
+    <p class="t-note"><a href="/assets/body_pose_data_07282025_1126pm.rrd" download>Download the .rrd</a> (1.1&nbsp;MB, Rerun 0.24).</p>
+  </section>
+
+  <section class="sec">
+    <h2>Docs: bone frames</h2>
+    <p>The coordinate frame of every bone, as delivered to the server. Keypoint names, hierarchy and the mapping to LaFAN1 and MediaPipe are
+      documented in <a href="{{github_org}}/XRT_devices">XRT_devices</a>.</p>
+    <iframe class="rerun" title="Rerun viewer: XRT bone frames" loading="lazy" allow="fullscreen"
+      data-rrd="/assets/visualize_bone_frames.rrd" data-rerun="0.23.3"></iframe>
+    <p class="t-note"><a href="/assets/visualize_bone_frames.rrd" download>Download the .rrd</a> (0.3&nbsp;MB, Rerun 0.23).</p>
+  </section>
+</div>
