@@ -17,6 +17,14 @@ There is no framework and no build step to host it: `site/` is plain HTML/CSS/JS
 with one shared header/footer by `scripts/build_pages.py` (standard-library Python). Edit `src/pages/…`, then run
 `python3 scripts/build_pages.py`. Site-wide settings (domain, paper link, arXiv link, GitHub org) are in `CONFIG` at the top of that script.
 
+
+## Related repositories
+
+- [XRT-Client](https://github.com/Euler-Rodrigues-Lab/XRT-Client): Unity app for Meta Quest 3 (prebuilt APK in its releases)
+- [proj_XRT](https://github.com/Euler-Rodrigues-Lab/proj_XRT): XRT application for a Unitree G1 with Inspire hands, and the dual-operator study stack
+- [XRT_devices](https://github.com/Euler-Rodrigues-Lab/XRT_devices): WebRTC headset receiver, pose recording and playback
+- [g1_teleop](https://github.com/Euler-Rodrigues-Lab/g1_teleop) and [geo_kin_core](https://github.com/Euler-Rodrigues-Lab/geo_kin_core): G1 control and SEW-Mimic retargeting
+
 ## Address: https://xrt-teleop.github.io
 
 Free and permanent, with nothing to renew. `xrt.github.io` was taken (a dormant account since 2013), and the GitHub names
@@ -54,7 +62,7 @@ and change `CONFIG['domain']` in `scripts/build_pages.py`.
 
 - **arXiv link:** set `CONFIG['arxiv']` in `scripts/build_pages.py`; the nav then shows "arXiv". Also add `eprint`/`archivePrefix`
   to the BibTeX in `src/pages/study.html`.
-- **Paper PDF:** add the new PDF under `site/assets/` and set `paper_pdf` in `CONFIG` (currently `XRT_preprint_2026-10-16.pdf`).
+- **Paper PDF:** add the new PDF under `site/assets/` and set `paper_pdf` in `CONFIG` (currently `XRT_preprint_2026-10-16_v2.pdf`).
 - **Preview locally:** `cd site && python3 -m http.server 8765`, then open http://127.0.0.1:8765 (pages use root paths, so opening
   the HTML files directly does not work; the Rerun panels stay blank locally because this server sends no CORS header).
 - **Videos:** `scripts/build_media.sh` rebuilds every clip from `../video_submission_final` (H.264, 720p, fast-start, posters).
