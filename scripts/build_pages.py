@@ -17,7 +17,7 @@ CONFIG = dict(
     devices_repo='https://github.com/Euler-Rodrigues-Lab/XRT_devices',
     app_repo='https://github.com/Euler-Rodrigues-Lab/proj_XRT',
     paper_pdf='/assets/XRT_preprint_2026-10-16_v3.pdf',
-    arxiv='',  # e.g. 'https://arxiv.org/abs/26xx.xxxxx'; empty -> nav links to the PDF
+    arxiv='https://arxiv.org/abs/2610.24257',  # empty -> nav links to the PDF
     year='2026',
 )
 NAV = [('videos', '/', 'Videos'), ('system', '/system/', 'XRT System'),
